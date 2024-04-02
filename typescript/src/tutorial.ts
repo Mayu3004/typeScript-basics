@@ -125,10 +125,10 @@ let bike: {brand:string,cost:number} = {
      cost:150000
     }
 
-let laptop: {brand:string,year:number} = {
-    brand:'Dell',
-     year:2023
-    }
+// let laptop: {brand:string,year:number} = {
+//     brand:'Dell',
+//      year:2023
+//     }
 
 let productArray: {title:string,price?:number}[]=[
     {
@@ -394,7 +394,8 @@ interface Books {
     author: string;
     genre?:string;
     printAuthor():void;
-    printTitle(message:string):string
+    printTitle(message:string):string;
+    printSomething: (someValue: number)=>number;
 }
 
 const deepWork:Books = {
@@ -402,13 +403,161 @@ const deepWork:Books = {
     title: 'Deep Work',
     author: 'Cal Newport',
     genre: 'Self-help',
-    printAuthor(){
-        console.log(this.author)
-    },
+    // printAuthor(){
+    //     console.log(this.author)
+    // },
     printTitle(message){
         return `${this.title} ${message}`
-    }
+    },
+    //first option
+    // printSomething:function(someValue){
+    //     return someValue;
+    // }
+    //second option
+    // printSomething:(someValue)=>{
+    //     console.log(deepWork.author) // requires this parameter as arrow function captures global
+    //     return someValue;
+    // }
+    //third option
+    printSomething(someValue){
+        return someValue;
+    },
+    printAuthor:()=>{
+        console.log(deepWork.author)
+    },
 }
 
 deepWork.printAuthor()
 console.log(deepWork.printTitle('is a awesome book'));
+console.log(deepWork.printSomething(34));
+
+//CHALLENGE
+// 1.Start by defining an interface Computer using the interface keyword. This will serve as a blueprint for objects that will be of this type.
+// 2.Inside the interface, define the properties that the object should have. In this case, we have id, brand, ram, and storage.
+// 3.Use the readonly keyword before the id property to indicate that it cannot be changed once it's set.
+// 4.Use the ? after the storage property to indicate that this property is optional and may not exist on all objects of this type.
+// 5.Also inside the interface, define any methods that the object should have. In this case, we have upgradeRam, which is a function that takes a number and returns a number.
+// 6.Now that we have our interface, we can create an object that adheres to this interface. This object should have all the properties defined in the interface (except for optional ones, which are... optional), and the methods should be implemented.
+// 7.Finally, we can use our object. We can call its upgradeRam method to increase its RAM.
+
+interface Computer{
+    readonly id:number;
+    brand:string;
+    ram:number;
+    upgradeRam(increase: number):number;
+    storage?:number;
+}
+const laptop: Computer={
+    id:1,
+    brand:'random brand',
+    ram:8, 
+    upgradeRam(amount: number){
+        this.ram = this.ram+amount
+        return this.ram;
+    },
+};
+laptop.storage = 256;
+
+console.log(laptop.upgradeRam(4)); 
+console.log(laptop);
+
+// interface Person{
+//     name:string;
+//     getDetails():string;
+// }
+// interface DogOwner{
+//     dogName: string;
+//     getDogDetails():string;
+// }
+// interface Person{
+//     age: number
+// }
+
+// const person:Person ={
+//     name:'MAyur',
+//     age:30,
+//     getDetails() {
+//         return `Name: ${this.name}, Age: ${this.age}`
+//     },
+// }
+
+// console.log(person.getDetails())
+
+// interface Employees extends Person{
+//     employeeId: number;
+// }
+
+// const employee:Employees ={
+//     name:"Mayur",
+//     age:30,
+//     employeeId: 123,
+//     getDetails(){
+//         return `Name: ${this.name}, Age: ${this.age} EmployeeID: ${this.employeeId}`
+//     }
+// }
+// console.log(employee.getDetails())
+
+// interface Managers extends Person,DogOwner{
+//     managePeople():void;
+// }
+
+// const manager:Managers = {
+//     name: 'Aniruddha',
+//     age:35,
+//     dogName: 'rex',
+//     getDetails(){
+//         return `Name: ${this.name}, Age: ${this.age}`
+//     },
+//     getDogDetails(){
+//         return `Dog Name: ${this.dogName}`
+//     },
+//     managePeople(){
+//         console.log("managing people..")
+//     },
+    
+// }
+// console.log(manager.managePeople())
+
+// CHALLENGE PART 1
+
+// 1.Define the Person interface Start by defining a Person interface with a name property of type string.
+// 2.Define the DogOwner interface Next, define a DogOwner interface that extends Person and adds a dogName property of type string.
+// 3.Define the Manager interface Then, define a Manager interface that extends Person and adds two methods: managePeople and delegateTasks. Both methods should have a return type of void.
+// 4.Define the getEmployee function Now, define a function called getEmployee that returns a Person, DogOwner, or Manager. Inside this function, generate a random number and use it to decide which type of object to return. If the number is less than 0.33, return a Person. If it's less than 0.66, return a DogOwner. Otherwise, return a Manager.
+// 5.Finally, create a variable called employee that can be a Person, DogOwner, or Manager, and assign it the return value of getEmployee. Then, log employee to the console.
+
+interface Person{
+    name: string;
+}
+
+interface DogOwner extends Person{
+    dogName: string;
+}
+interface Managers extends Person{
+    managePeople():void;
+    delegateTasks():void;
+}
+
+
+const employee1: Person|DogOwner|Managers = getEmployee();
+console.log(employee1);
+
+function getEmployee(): Person|DogOwner|Managers {
+    const random = Math.random();
+    if(random < 0.33){
+        return{
+            name:'Mayur',
+        };
+    }else if(random < 0.66){
+        return{
+            name:'Amit',
+            dogName:'Rex',
+        };
+    }else{
+        return{
+            name:'Anirrudha',
+            managePeople:()=>console.log('Managing people...'),
+            delegateTasks:()=>console.log('Delegating tasks...'),
+        };
+    }
+}
