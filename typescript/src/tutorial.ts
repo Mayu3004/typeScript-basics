@@ -192,3 +192,223 @@ function isNamePresent(nameStudent:string[]):boolean{
 }
 
 console.log(isNamePresent(nameStudent))
+
+// Optional and default parameters
+
+function calculatePrice(price:number,discount?:number):number{
+    return price-(discount || 0);//giving optional parameters
+}
+let priceAfterDiscount = calculatePrice(100,80);
+
+function calculateScore(initalScore:number,penaltyPoints:number=0):number{
+    return initalScore-penaltyPoints;
+}
+
+let scoreAfterPenalty = calculateScore(100,20);
+let scoreWithoutPenalty = calculateScore(100);
+
+function sum(message:string, ...numbers:number[]):string{
+    const doubled = numbers.map((num)=>num*2);
+    let total = numbers.reduce((prev,curr)=>{
+        return prev+curr;
+    },0);
+    return `${message}${total}`
+
+}
+let result = sum('The total is: ',1,2,3,4,5)
+
+// returning nothing from the function i.e void returntype
+
+function logMessage(message: string): void{
+    console.log(message);
+    // return "abc"// gives error as return type is void
+}
+
+logMessage("Hello World")
+
+//CHALLENGES
+// 1.Your task is to create a function named processInput that accepts a parameter of a union type string | number. The function should behave as follows:
+
+// 2.If the input is of type number, the function should multiply the number by 2 and log the result to the console.
+// If the input is of type string, the function should convert the string to uppercase and log the result to the console.
+
+function processInput(param:(string | number)):(string|number){
+    if(typeof param ==='number'){
+        return param*2;
+    }else{
+        return param.toUpperCase();
+    }
+}
+//Object as parameter
+
+function createEmployee({id}:{id: number}):{
+    id:number,
+    isActive:boolean
+    } {
+    return {id,isActive: id%2===0}
+};
+
+const first = createEmployee({id:1})
+const second = createEmployee({id:2})
+console.log(first,second)
+
+//alternative
+
+function createStudent(student:{id:number,name:string}):void{
+    console.log(`WElcome to the course ${student.name.toUpperCase()}`)
+}
+
+createStudent({id:1,name:'Mayur'})
+
+// CHALLENGE
+//1. Your task is to create a function named processData that accepts two parameters:
+
+// 2.The first parameter, input, should be a union type that can be either a string or a number.
+// 3.The second parameter, config, should be an object with a reverse property of type boolean, by default it "reverse" should be false
+// The function should behave as follows:
+
+// 4.If input is of type number, the function should return the square of the number.
+// 5.If input is of type string, the function should return the string in uppercase.
+//6.If the reverse property on the config object is true, and input is a string, the function should return the reversed string in uppercase.
+
+function processData(input:(string|number),config:{reverse:boolean}={reverse:false}):string|number{
+    if(typeof input === 'number'){
+        return input**2;
+    }else{
+        let res = input.toUpperCase();
+        if(config.reverse){
+            return res.split('').reverse().join('');
+            
+        }
+        return res;
+    }
+}
+
+console.log(processData(10))
+console.log(processData('mayur'))
+console.log(processData('amit',{reverse:true}))
+
+// Alias and Interface
+type User =  {id: number;name:string;isActive:boolean}
+const john:User={
+    id:1,
+    name:'john',
+    isActive: true
+}
+const sushan:User={
+    id:1,
+    name:'sushan',
+    isActive: false
+}
+
+function createUser(user:User):User{
+        console.log(`Hello there ${user.name.toUpperCase()}`)
+        return user;
+}
+ 
+ type StringOrNumber = string | number;
+
+ let value:StringOrNumber;
+ value = 'hello';
+ value = 123;
+ type Theme = 'light' | 'Dark';
+
+ let theme:Theme;
+ theme = 'Dark';
+ theme = 'light'
+
+ function setTheme(t: Theme){
+
+ }
+
+ //Challenge
+// 1. Define the Employee type: Create a type Employee with properties id (number), name (string), and department (string).
+
+// 2.Define the Manager type: Create a type Manager with properties id (number), name (string), and employees (an array of Employee).
+
+// 3.Create a Union Type: Define a type Staff that is a union of Employee and Manager.
+
+// 4.Create the printStaffDetails function: This function should accept a parameter of type Staff. Inside the function, use a type guard to check if the 'employees' property exists in the passed object. If it does, print a message indicating that the person is a manager and the number of employees they manage. If it doesn't, print a message indicating that the person is an employee and the department they belong to.
+
+//5. Create Employee and Manager objects: Create two Employee objects. One named alice and second named steve. Also create a Manager object named bob who manages alice and steve.
+
+// 6.Test the function: Call the printStaffDetails function with alice and bob as arguments and verify the output.
+
+
+type Employee = {id:number;name:string;department:string};
+type Manager = {id:number;name:string; employees:Employee[]};
+
+type Staff = Manager | Employee;
+
+function printStaffDetails(staff:Staff):void{
+    if('employees' in staff){
+        console.log(`${staff.name} is an manager and has ${staff.employees.length} employees`)
+
+    }else{
+        console.log(`${staff.name} is an employee in the ${staff.department} department`)
+    }
+}
+
+const mayur:Employee = {id:1,name:'Mayur',department:'Delivery'};
+const amit:Employee = {id:1,name:'Amit',department:'Delivery'};
+const yuviraj:Employee = {id:1,name:'Yuviraj',department:'Delivery'};
+
+const aniruddha:Manager = {id:1,name:'Anirudhha',employees:[mayur,amit,yuviraj]};
+
+printStaffDetails(aniruddha);
+printStaffDetails(mayur);
+
+type Book = {id: number;name:string;price:number};
+type DiscountedBook = Book&{discount: number};
+
+const book1:Book ={
+    id: 1,
+    name:"How to cook a dragon",
+    price:15
+};
+const book2:Book ={
+    id: 2,
+    name:"The secret life of unicorns",
+    price:15
+};
+const discountedBook:DiscountedBook={
+    id: 3,
+    name:"Gnomes vs. Goblins: The Ulimate Guide",
+    price:15,
+    discount:0.15
+};
+
+
+const propName = 'age';
+type Animal = {
+    [propName]: number;
+};
+let tiger:Animal = {[propName]: 5};
+
+
+//# iNTERFACE fudamental
+
+interface Books {
+    readonly isbn: number;
+    title: string;
+    author: string;
+    genre?:string;
+    printAuthor():void;
+    printTitle(message:string):string
+}
+
+const deepWork:Books = {
+    isbn:123,
+    title: 'Deep Work',
+    author: 'Cal Newport',
+    genre: 'Self-help',
+    printAuthor(){
+        console.log(this.author)
+    },
+    printTitle(message){
+        return `${this.title} ${message}`
+    }
+}
+
+deepWork.printAuthor()
+console.log(deepWork.printTitle('is a awesome book'));
