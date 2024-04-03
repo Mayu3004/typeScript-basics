@@ -20,17 +20,57 @@ type Task = {
     isCompleted:boolean;
 };
 
-const tasks: Task[] = [];
+const tasks: Task[] = loadTasks();
+tasks.forEach(renderTask)
 
-function createTask(event: SubmitEvent){
+function loadTasks(): Task[]{
+    const storedTasks = localStorage.getItem('tasks')
+    return storedTasks? JSON.parse(storedTasks) :[]
+}
+
+// function createTask(event){
+    
+// }
+
+taskForm?.addEventListener('submit',(event)=>{
     event.preventDefault()
     const taskDescription = formInput?.value
     if(taskDescription){
-        console.log(taskDescription)
-        formInput.value = '';
+        const task: Task = {
+            description:taskDescription,
+            isCompleted: false
+        };
+        addTask(task);
+        renderTask(task);
+        updateStorage();
+        formInput.value = "" ;
         return;
-    }
+       }
     alert('please enter a task description')
+
+})
+
+function addTask(task: Task):void{
+    tasks.push(task);
+    console.log(tasks);
 }
 
-taskForm?.addEventListener('submit',createTask)
+function renderTask(task:Task):void{
+    const taskElement = document.createElement('li');
+    const taskCheckbox = document.createElement('input');
+    taskCheckbox.type = 'checkbox';
+    taskCheckbox.checked = task.isCompleted;
+    taskCheckbox.addEventListener('change', () => {
+        task.isCompleted = !task.isCompleted;
+        updateStorage();
+    })
+    
+    taskElement.textContent = task.description;
+    taskElement?.appendChild(taskCheckbox)
+    taskListElement?.appendChild(taskElement)
+    
+  }
+
+function updateStorage():void{
+    localStorage.setItem('tasks',JSON.stringify(tasks))
+}
