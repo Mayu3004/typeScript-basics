@@ -2,9 +2,9 @@
 export function sayHello(name: string): void{
     console.log(`Hello ${name}`)
 }
-export let person = 'susan';
+export let person2 = 'susan';
 
-type Student = {
+export type Student = {
     name: string;
     age: number;
 }

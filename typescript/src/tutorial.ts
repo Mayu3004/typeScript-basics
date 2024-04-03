@@ -732,4 +732,189 @@ console.log(getColorName(Color.red));
 console.log(getColorName(Color.Blue));
 
 
-const susan = 'mayur'
+
+import newStudent, {sayHello,person2, type Student} from "./action";
+
+sayHello('TypeScript');
+console.log(newStudent);
+console.log(person);
+
+const stud:Student = {
+    name: 'Chetan',
+    age: 18
+}
+
+console.log(stud);
+
+
+//Type Guarding
+
+// CHALLENGE
+// 1.Define the function checkValue that takes one parameter value of type ValueType.
+// 2.Inside the function, use an if statement to check if value is of type string. If it is, log value converted to lowercase and then return from the function.
+// 3.If value is not a string, use another if statement to check if value is of type number. If it is, log value formatted to two decimal places and then return from the function.
+// 4.If value is neither a string nor a number, it must be a boolean. Log the string "boolean: " followed by the boolean value.
+// Finally, call the checkValue function with value as the argument.
+
+type ValueType = string|number|boolean;
+
+let value1: ValueType;
+const random1 = Math.random();
+value1 = random1<0.33 ? 'Hello' : random1<0.66 ? 123.456 : true;
+
+function checkValue(value: ValueType):void{
+    if(typeof value === 'string'){
+        console.log(value.toLowerCase());
+        return;
+    }
+    if(typeof value === 'number'){
+        console.log(value.toFixed(2));
+        return;
+    }
+    console.log(`boolean: ${value}`);
+}
+checkValue(12);
+
+// Equality Narrowing
+
+// 1.Define a function named makeSound that takes one parameter animal of type Animal.
+// 2.Inside the function, use an if statement to check if animal.type is 'dog'.
+// 3.If animal.type is 'dog', TypeScript knows that animal is a Dog in this block. In this case, call the bark method of animal.
+// 4.If animal.type is not 'dog', TypeScript knows that animal is a Cat in the else block. In this case, call the meow method of animal.
+// 5.Now you can call the makeSound function with an Animal as the argument. The function will call the appropriate method (bark or meow) depending on the type of the animal.
+
+type Dog = {
+    type:'dog';
+    name:string;
+    bark:()=>void
+}
+type Cat = {
+    type:'cat';
+    name:string;
+    meow:()=>void
+}
+type Animal1 = Dog|Cat;
+
+// function makeSound(animal:Animal1){
+//     if(animal.type === 'dog'){
+//         animal.bark();
+//     }else{
+//         animal.meow();
+//     }
+// }
+
+function makeSound(animal:Animal1){
+    if('bark' in animal){
+        animal.bark();
+    }else{
+        animal.meow();
+    }
+}
+
+// CHALLENGE
+// 1.Define a function named printLength that takes one parameter str which can be of type string, null, or undefined.
+// 2.Inside the function, use an if statement to check if str is truthy. In JavaScript and TypeScript, a truthy value is a value that is considered true when encountered in a Boolean context. All values are truthy unless they are defined as falsy (i.e., except for false, 0, -0, 0n, "", null, undefined, and NaN).
+// 3.If str is truthy, it means it's a string (since null and undefined are falsy). In this case, log the length of str using the length property of the string.
+// 4.If str is not truthy (i.e., it's either null or undefined), log the string 'No string provided'.
+// 5.Now you can call the printLength function with a string, null, or undefined as the argument. The function will print the length of the string if a string is provided, or 'No string provided' otherwise.
+
+function printLength(str: string|null|undefined){
+    if(str){
+        console.log(str.length)
+    }else{
+        console.log('no string')
+    }
+}
+
+try {
+    throw new Error('Tis is error')
+} catch (error) {
+    if(error instanceof Error){
+        console.log(`Caught an error object: ${error.message}`);
+    }else{
+        console.log('unkown error..');  
+    }
+}
+
+function checkInput(input:Date|string):string{
+    if(input instanceof Date){
+        return input.getFullYear().toString();
+    }
+    return input;
+}
+console.log(checkInput(new Date()));
+console.log(checkInput('2020-04-09'));
+
+//Type Predection
+
+// 1.Define the Person and Student types. Student should have a study method and Person should have a login method.
+// 2.Create a function named isStudent that takes a parameter person of type Person.
+// 3.In the function signature, specify a return type that is a type predicate: person is Student.
+// 4.In the function body, use a type assertion to treat person as a Student, and check if the study - method is not undefined. This will return true if person is a Student, and false otherwise.
+// 5.Use the isStudent function in an if statement with person as the argument.
+// 6.In the if block (where isStudent(person) is true), call the study method on person. TypeScript knows that person is a Student in this block, so this is safe.
+// 7.In the else block (where isStudent(person) is false), call the login method on person. This is safe because if person is not a Student, it must be a Person, and all Person objects have a login method.
+
+type Student = {
+    name: string;
+    study: ()=> void;
+};
+
+type User3 ={
+    name: string;
+    login: ()=>void;
+};
+type Person1 = Student|User3;
+
+const randomPerson1 = (): Person1 =>{
+    return Math.random() > 0.5
+    ? {name:'Mayur',study:()=>console.log('studying')}
+    :{name:'amit',login: ()=> console.log('Logging in')}
+}
+
+const person3 = randomPerson1()
+function isStudent(person:Person1):person is Student{
+    // return 'study' in person;
+    return (person as Student).study !== undefined;
+}
+
+if(isStudent(person3)){
+    person3.study()
+}else{
+    person3.login()
+}
+
+//Challenge - Discrimated Union and exhaustive check using the never type
+
+type IncrementAction ={
+    type: 'increment';
+    amount: number;
+    timestamp: number;
+    user:string;
+};
+type DecrementAction ={
+    type: 'decrement';
+    amount: number;
+    timestamp: number;
+    user:string;
+}
+
+type Action = IncrementAction|DecrementAction;
+
+function reducer(state:number,action:Action){
+    switch(action.type){
+        case 'increment':
+            return state+action.amount;
+        case 'decrement':
+            return state-action.amount;
+        default:
+            const unexpectedAction:never = action
+            throw new Error(`unexpected action: ${unexpectedAction}`);
+    }
+}
+const newState = reducer(15,{
+    user:'Mayur',
+    type:"increment",
+    amount:5,
+    timestamp: 123456
+})
