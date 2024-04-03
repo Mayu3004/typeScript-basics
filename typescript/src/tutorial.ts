@@ -628,12 +628,108 @@ console.log(user)
 
 // Type decision
 
-let someValue: any = 'this is string';
-let strLength: number = (someValue as string).length;
+// let someValue: any = 'this is string';
+// let strLength: number = (someValue as string).length;
 
-type Bird = {
+// type Bird = {
+//     name: string;
+// };
+
+// let bridString = '{name: "Eagle"}';
+// let dogString = '{breed: "Poodle"}';
+// let birdObject  = JSON.parse(bridString);
+// let dogObject  = JSON.parse(dogString);
+
+// let bird = birdObject as Bird;
+// let dog = dogObject as Bird;
+
+// console.log(bird.name);
+// console.log(dog.name);
+
+enum Status{
+    Pending = 'pending',
+    Declined = 'declined',
+}
+
+type User2 = {
     name: string;
-};
+    status: Status;
+}
 
-let bridString = '{name: "Eagle"}';
-let dogString = '{name: "Poodle"}'
+const  statusValue = 'pending';
+const user1:User2 = {name:'Mayur',status:statusValue as Status}
+
+// TYPE UNKOWN
+
+let unkownValue: unknown;
+
+unkownValue = 'helloworld';
+unkownValue = [1,2,3];
+unkownValue = 42.33;
+
+if(typeof unkownValue ==='number'){
+    unkownValue.toFixed(3);
+}
+function runSomeCode(){
+    const random = Math.random();
+    if(random<0.5){
+        throw new Error('There was a error..')
+    }else{
+        throw 'string'
+    }
+}
+
+try {
+    runSomeCode();
+} catch (error) {
+    if(error instanceof Error){
+        console.log(error.message);
+    }else{
+        console.log(error)
+    }
+}
+
+//  type never
+
+// let someValue1:never = 0;
+
+type Theme1 = 'light'|'Dark'
+
+function checkTheme(theme: Theme1):void{
+    if(theme === 'light'){
+        console.log('light Theme');
+        return
+    } 
+    if(theme === 'Dark'){
+        console.log('Dark Theme');
+        return
+    } 
+    theme;
+}
+
+enum Color{
+    red,
+    Blue,
+    Green
+}
+
+function getColorName(color:Color){
+    switch(color){
+        case Color.red:
+            return 'Red';
+        case Color.Blue:
+            return 'Blue';
+        case Color.Green:
+            return 'Green';
+        default:
+            let unexpectedColor:never = color;
+
+            throw new Error(`Unexpected color value: ${color}`)
+    }
+}
+
+console.log(getColorName(Color.red));
+console.log(getColorName(Color.Blue));
+
+
+const susan = 'mayur'
