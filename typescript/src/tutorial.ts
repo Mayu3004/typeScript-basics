@@ -918,3 +918,141 @@ const newState = reducer(15,{
     amount:5,
     timestamp: 123456
 })
+
+// Arrays
+// let array1: string[] = ['apple','mango','banana'];
+// let array2: number[] = [1,2,3];
+// let array3: boolean[] = [true,false];
+
+let array1: Array<string> = ['apple','mango','banana'];
+
+
+// function createString(arg:string):string{
+//     return arg;
+// }
+// function createNumber(arg:number):number{
+//     return arg;
+// }
+
+function genricFunction<T>(arg:T):T{
+    return arg
+}
+
+const someStringValue = genricFunction<string>('Hello World');
+const someNumberValue = genricFunction<number>(123);
+
+interface GenericInteface<T>{
+    value: T;
+    getValue: ()=>T;
+}
+
+const genericString: GenericInteface<string> = {
+    value: 'Hello world',
+    getValue(){
+        return this.value;
+    }
+}
+
+async function someFunc():Promise<string> {
+    return 'hello world'
+}
+const resultValue = someFunc();
+
+function generateStringArray(length: number,value: string):string[]{
+    let result: string[] = []
+    result = Array(length).fill(value);
+    return result;
+}
+
+function createArray<T>(length:number,value:T):Array<T>{
+    let result: T[] = [];
+    result = Array(length).fill(value);
+    return result;
+}
+let arrayString = createArray<string>(10,'hello');
+let numberString = createArray<number>(10,2);
+
+console.log(arrayString);
+console.log(numberString);
+
+function pair<T,U>(param1:T,param2:U):[T,U]{
+    return [param1,param2]
+}
+
+let resutantValue = pair<string,number>('hello',123);
+
+function processValue<T extends string>(value: T):T{
+    console.log(value);
+    return value;
+}
+
+type Car = {
+    brand: string;
+    model: string;
+};
+const cars:Car = {
+    brand: 'ford',
+    model: 'mustang'
+}
+
+type Product = {
+    name: string;
+    price: number;
+};
+const products:Product = {
+    name: 'shoes',
+    price: 1.99
+}
+
+type Students = {
+    name: string;
+    age:number
+}
+const students:Students ={
+    name: 'Mayur',
+    age:21
+}
+
+function printName<T extends {name: string}>(input:T):void{
+    console.log(input.name);
+    
+}
+printName(students)
+printName(products)
+
+interface StoreData<T = any>{
+    data:T[];
+}
+const storeNumbers:StoreData<number> = {
+    data:[1,2,3,4]
+}
+const randomStuff:StoreData ={
+    data: ['random',1],
+}
+
+// FETCH DATA
+
+const url = 'https://www.course-api.com/react-tours-project';
+
+async function fetchData(url: string){
+    try{
+        const response = await fetch(url);
+        if(!response.ok){
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        return data;
+    }catch(error){
+        const errorMsg = error instanceof Error ? error.message : 'there was an error.';
+        console.log(errorMsg);
+        return[];
+    }
+}
+
+
+const tours = await fetchData(url)
+tours.map((tour: any)=>{
+    console.log(tour.name);
+    
+})
