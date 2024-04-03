@@ -1032,17 +1032,43 @@ const randomStuff:StoreData ={
 
 // FETCH DATA
 
+import {z} from 'zod';
+
+
 const url = 'https://www.course-api.com/react-tours-project';
 
-async function fetchData(url: string){
+const tourSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    info: z.string(),
+    image: z.string(),
+    price: z.string(),
+})
+type Tour = z.infer<typeof tourSchema>
+
+// type Tour = {
+//     id: string;
+//     name: string;
+//     info: string;
+//     image: string;
+//     price: string;
+
+// }
+
+async function fetchData(url: string):Promise<Tour[]>{
     try{
         const response = await fetch(url);
         if(!response.ok){
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        console.log(data)
-        return data;
+        // const data:Tour[] = await response.json();
+        const rawData:Tour[] = await response.json();
+        const result = tourSchema.array().safeParse(rawData);
+        if(!result.success){
+            throw new Error(`Invalid data: ${result.error}`)
+        }
+        console.log(result)
+        return rawData;
     }catch(error){
         const errorMsg = error instanceof Error ? error.message : 'there was an error.';
         console.log(errorMsg);
@@ -1052,7 +1078,87 @@ async function fetchData(url: string){
 
 
 const tours = await fetchData(url)
-tours.map((tour: any)=>{
+tours.map((tour)=>{
     console.log(tour.name);
     
 })
+
+import { Random } from "./types";
+
+
+import bcryptjs from 'bcryptjs'
+
+// CLasses
+
+// class Books{
+//     public readonly title:string;
+//     public author:string;
+//     private checkedOut:boolean = false;
+//     constructor(title:string,author:string){
+//         this.title = title;
+//         this.author = author;
+//     }
+//     public checkOut(){
+//         this.checkedOut = this.toggleCheckedOutStatus();
+//     }
+//     public isCheckedOut(){
+//         return this.checkedOut;
+//     }
+//     private toggleCheckedOutStatus(){
+//         return !this.checkedOut;
+//     }
+// }
+// const deepWorks = new Books('Deep Work' , 'cal NewPort');
+// console.log(deepWorks)
+// deepWorks.checkOut();
+// console.log(deepWorks);
+//code redundancy happens
+
+class Books{
+    private checkedOut: boolean = false;
+    constructor(readonly title: string,public author:string,private someValue:number){
+    }
+    public getSomeValue(){
+        return this.someValue;
+    }
+    get info(){
+        return `${this.title} by ${this.author}`
+    }
+    private set checkOut(checkedOut:boolean){
+        this.checkedOut = checkedOut;
+    }
+    get checkOut(){
+        return this.checkedOut;
+    }
+    public get someInfo(){
+        this.checkOut = true;
+        return `${this.title} by ${this.author}`
+    }
+}
+const deepWorks = new Books('Deep Work','cal NewPort',123);
+console.log(deepWorks.getSomeValue());
+console.log(deepWorks.info);
+// deepWorks.checkOut = true;
+console.log(deepWorks);
+console.log(deepWorks.someInfo);
+console.log(deepWorks);
+
+
+interface IPerson{
+    name: string;
+    age:number;
+    greet(): void;
+}
+
+class Person implements IPerson{
+    constructor(public name: string,public age:number){
+
+    }
+    greet():void{
+        console.log(`Hello my name is ${this.name} and i am ${this.age} yrs old`);
+        
+    }
+}
+
+const mayuresh = new Person('Mayur',21)
+mayuresh.greet();
