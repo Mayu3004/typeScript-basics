@@ -540,15 +540,14 @@ interface Managers extends Person{
 
 
 const employee1: Person|DogOwner|Managers = getEmployee();
-console.log(employee1);
 
 function getEmployee(): Person|DogOwner|Managers {
     const random = Math.random();
-    if(random < 0.33){
+    if(random<0.33){
         return{
             name:'Mayur',
         };
-    }else if(random < 0.66){
+    }else if(random <0.66){
         return{
             name:'Amit',
             dogName:'Rex',
@@ -561,3 +560,80 @@ function getEmployee(): Person|DogOwner|Managers {
         };
     }
 }
+
+// Tuples
+
+let person:[string,number] = ['Mayur',21];
+let date: readonly[number,number,number]=[12,17,2001];
+// date.push(43); not allowed brcoz readonly
+function getPerson():[string,number]{
+    return ['Mayur',21]
+}
+let randomPerson = getPerson();
+console.log(randomPerson[0]);
+
+//Enum => named constant
+enum serverResponseStatus{
+    Success = 200,
+    Error = 500,
+}
+Object.values(serverResponseStatus).forEach((value)=>{
+    if(typeof value === 'number'){
+        console.log(value);
+    }
+});
+
+interface ServerResponse{
+    result: serverResponseStatus;
+    data: string[];
+}
+
+function getServerResponse():ServerResponse{
+    return{
+        result:serverResponseStatus.Error,
+        data:['first','second'],
+    }
+}
+
+let response:ServerResponse = getServerResponse()
+console.log(response)
+
+//CHALLENGE
+// 1.Define an enum named UserRole with members Admin, Manager, and Employee.
+// 2.Define a type alias named User with properties id (number), name (string), role (UserRole), and contact (a tuple with two elements: email as string and phone as string).
+// 3.Define a function named createUser that takes a User object as its parameter and returns a User object.
+// 4.Call the createUser function with an object that matches the User type, store the result in a variable, and log the variable to the console.
+
+
+enum userRole{
+    Admin,
+    Manager,
+    Employee
+}
+
+type User1 ={
+    id: number;
+    name: string;
+    role:userRole;
+    contact:[string,string]
+};
+
+function createUsers(user:User1):User1{
+    return user;
+}
+const user:User1 = createUsers({
+    id:1,name:'Mayur',role:userRole.Admin, contact:['Mayu@gmail.com','123-345']
+})
+console.log(user)
+
+// Type decision
+
+let someValue: any = 'this is string';
+let strLength: number = (someValue as string).length;
+
+type Bird = {
+    name: string;
+};
+
+let bridString = '{name: "Eagle"}';
+let dogString = '{name: "Poodle"}'
